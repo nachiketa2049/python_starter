@@ -18,6 +18,9 @@ class DataIngestion:
         self.ingestion_config=DataIngestionConfig()
     
     def initiate_data_ingestion(self):
+        '''
+         This function is responsible for data ingestion
+        '''
         logging.info("Entered into the Data ingestion Component")
         try:
             df=pd.read_csv('notebook/data/stud.csv')
@@ -42,6 +45,6 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e,sys)
 
-if __name__=="__main__":
-    obj=DataIngestion()
-    obj.initiate_data_ingestion()
+# if __name__=="__main__":
+#     obj=DataIngestion()
+#     obj.initiate_data_ingestion()
