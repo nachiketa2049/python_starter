@@ -14,6 +14,7 @@ from src.exception import CustomException
 from src.logger import logging
 import src.utils as utils
 
+@dataclass
 class DataTransformationConfig:
     preprocessor_obj_file_path = os.path.join('artifacts','preprocessor.pkl')
 
@@ -37,16 +38,16 @@ class DataTransformation:
 
             num_pipeline= Pipeline(
                 steps= [
-                    ("imputer",SimpleImputer(strategy="median"))
+                    ("imputer",SimpleImputer(strategy="median")),
                     ("scaler",StandardScaler())
                 ]
             )
 
             cat_pipeline= Pipeline(
                 steps= [
-                    ("imputer",SimpleImputer(strategy="most_frequent"))
-                    ("one_hot_encoder",OneHotEncoder())
-                    ("scaler",StandardScaler())
+                    ("imputer",SimpleImputer(strategy="most_frequent")),
+                    ("one_hot_encoder",OneHotEncoder()),
+                    ("scaler",StandardScaler(with_mean=False))
                 ]
             )
 
@@ -58,7 +59,7 @@ class DataTransformation:
 
             preprocessor= ColumnTransformer(
                 [
-                    ("num_pipeline",num_pipeline,numerical_columns)
+                    ("num_pipeline",num_pipeline,numerical_columns),
                     ("cat_pipeline",cat_pipeline,categorical_columns)
                 ]
             )
@@ -68,7 +69,7 @@ class DataTransformation:
         except Exception as e:
             raise CustomException(e,sys)
         
-    def initiate_data_transformayion(self,train_path,test_path):
+    def initiate_data_transformation(self,train_path,test_path):
         try:
             train_df=pd.read_csv(train_path)
             test_df=pd.read_csv(test_path)
@@ -104,7 +105,7 @@ class DataTransformation:
 
             utils.save_object(
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
-                object=preprocessing_obj
+                obj=preprocessing_obj
             )
 
             return(
